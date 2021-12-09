@@ -1,0 +1,117 @@
+# quiz
+# bryn
+
+# import libraries
+from appJar import gui
+
+questions = [] 
+quiz_progress = 0
+score = 0
+#functions
+
+# class definitions
+class Question:
+    # initilise class
+    def __init__(self, question, answers, correct_answer):
+        self.question = question
+        self.answers = answers
+        self.correct_answer = correct_answer      
+    # returns True if correct answer is selected
+    def check_correct(self, selected_answer):
+        print("selected_answer = "+str(selected_answer))
+        if selected_answer == self.correct_answer:
+            _correct = True
+        else:
+            _correct = False
+        return _correct
+    # returns array of all possible answers
+    def get_answer_array(self):
+        _answer_array = self.answers
+        return _answer_array
+    # returns the answer text
+    def get_question_text(self):
+        return self.question
+
+class Gui:
+    
+    def __init__(self):
+        # window setup
+        app = gui("Single Question Quiz", "600x300")
+        self._app = app
+        
+        app.setBg("white")
+        app.setFont(18)
+        app.addLabel("question_text",colspan=2)
+        app.setLabelBg("question_text","black")
+        app.setLabelFg("question_text","white")
+        app.setLabel("question_text",questions[0].get_question_text())  
+          
+        i = 0
+        for answer in questions[0].get_answer_array():
+            app.addButton(i,self.push)
+            app.setButton(i,answer)
+            i+=1
+
+        
+        app.addLabel("result",colspan=2)
+        app.setLabel("result","")
+        app.addButton("next",self.next_question)
+        app.hideButton("next")
+        app.go()
+        
+    # has to be the last thing that runs
+
+    def push(self, button):
+        global quiz_progress
+        print(button)
+        self._app.hideButton(0)
+        self._app.hideButton(1)
+        self._app.hideButton(2)
+        self._app.hideButton(3)
+        if questions[quiz_progress].check_correct(button):
+            self._app.setLabel("result","Correct")
+           
+       
+        else:
+            self._app.setLabel("result","Wrong")
+            
+        self._app.showButton("next")
+        
+        
+    def next_question(self,button):
+        global quiz_progress
+        global score
+        quiz_progress += 1
+        score += 1
+        if quiz_progress < len(questions):
+            print("Next")
+            print("Quiz_progress = "+str(quiz_progress))
+            self._app.hideButton("next")
+            self._app.setLabel("result","")
+            self._app.showButton(0)
+            self._app.showButton(1)
+            self._app.showButton(2)
+            self._app.showButton(3)            
+            self._app.setLabel("question_text",questions[quiz_progress].get_question_text())  
+            i = 0    
+            for answer in questions[quiz_progress].get_answer_array():
+                self._app.setButton(i,answer)
+                i+=1
+                
+        else:
+            self.results_screen()
+
+    def results_screen(self):
+        self._app.hideButton("next")
+        self._app.setLabel("question_text","RESULTS")
+        self._app.setLabel("result",score)
+        self._app.addLabel("points")
+
+
+# main routine       
+questions.append(Question("How many 1/4 notes are in a bar of 3/4?",["A) 5","B) 2","C) 4","D) 3"],3))
+questions.append(Question("What colour is it today?",["Mbrue","red","white","yellow"],1))
+
+quiz = Gui()
+
+#single_question_quiz.py
