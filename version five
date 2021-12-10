@@ -21,6 +21,7 @@ class Question:
         print("selected_answer = "+str(selected_answer))
         if selected_answer == self.correct_answer:
             _correct = True
+            
         else:
             _correct = False
         return _correct
@@ -63,6 +64,7 @@ class Gui:
 
     def push(self, button):
         global quiz_progress
+        global score
         print(button)
         self._app.hideButton(0)
         self._app.hideButton(1)
@@ -70,7 +72,7 @@ class Gui:
         self._app.hideButton(3)
         if questions[quiz_progress].check_correct(button):
             self._app.setLabel("result","Correct")
-           
+            score += 1
        
         else:
             self._app.setLabel("result","Wrong")
@@ -82,7 +84,7 @@ class Gui:
         global quiz_progress
         global score
         quiz_progress += 1
-        score += 1
+     
         if quiz_progress < len(questions):
             print("Next")
             print("Quiz_progress = "+str(quiz_progress))
